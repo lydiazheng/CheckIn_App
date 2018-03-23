@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Check-in App</title>
+<meta charset="utf-8">
+<!-- Latest compiled and minified CSS Bootstrap 4-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>-->
+</head>
+
+<body>
+<div>
+	<div class="tab">
+	    <form method="get" action="/">
+			<button type="submit">Homepage</button>
+		</form>
+		<form method="get" action="/check_in" method="GET">
+	    	<button type="submit">Student</button>
+	    </form>
+	</div>
+
+	<br>
+	<h1>Welcome to Online Check-in Application! </h1>
+	<h4>CMPT 218 Assignment 3 -- Lydia Zheng</h4><br>
+
+	<form class="form" action="/admin" method="post">
+		<legend><span class="number">&#9830</span><b> ADMIN LOGIN </b></legend>
+		*Username:
+		<input id="username" type="text" name="username" required>
+		<br><br>
+		*Password:
+		<input id="password" type="password" name="password" required>
+		<br><br>
+		<input type="submit" value="LOGIN" />
+	</form>
+	<br><br>
+	<form  class="form" action="/check_in" method="GET">
+		<legend><span class="number">&#9830</span><b> USER LOGIN </b></legend>
+		<input class='checkIn' type="submit" value="CHECK-IN NOW"></input>
+	</form>
+
+
+
+
+
+
+
+
+</div>
+</body>
+<style>
+	body{
+		background-color: #FAEBD7;
+	}
+
+	h1{
+		text-align: center;
+	}
+
+	h4{
+		text-align: center;
+	}
+
+	/* Style the tab */
+	.tab {
+	    overflow: hidden;
+	    background-color: #f1f1f1;
+	}
+
+	/* Style the buttons inside the tab */
+	.tab button {
+		margin-left: 10%;
+	    background-color: inherit;
+	    float: left;
+	    border: none;
+	    outline: none;
+	    cursor: pointer;
+	    padding: 14px 16px;
+	    transition: 0.3s;
+	    font-size: 17px;
+	}
+
+	/* Change background color of buttons on hover */
+	.tab button:hover {
+	    background-color: #FFDAB9;
+	    color: #FF6347;
+	}
+
+	/* Create an active/current tablink class */
+	.tab button.active {
+	    background-color: #ccc;
+	}
+
+	.form2{
+		text-align: center;
+	}
+
+	.checkIn{
+		text-align: center;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		background-color: #fd974f; /* orange */
+	    border: none;
+	    color: white;
+	    padding: 15px 32px;
+	    text-align: center;
+	    text-decoration: none;
+	    display: inline-block;
+	    font-size: 16px;
+	    margin: 4px 2px;
+	    cursor: pointer;
+	    -webkit-transition-duration: 0.4s; /* Safari */
+	    transition-duration: 0.4s;
+	    border-radius: 25px 25px ;
+	}
+
+	.checkIn:hover {
+	    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+
+	.form{
+		text-align: center;
+		max-width: 500px;
+	    padding: 10px 20px;
+	    margin: 10px auto;
+	    padding: 20px;
+	    background: #ffccac;
+	    border-radius: 8px;
+	    font-family: Georgia, "Times New Roman", Times, serif
+
+	}
+
+	.form .number {
+	    background: #f98866;
+	    color: #fff;
+	    height: 30px;
+	    width: 30px;
+	    display: inline-block;
+	    font-size: 0.8em;
+	    margin-right: 4px;
+	    line-height: 30px;
+	    text-align: center;
+	    text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+	    border-radius: 15px 15px 15px 0px;
+	}
+
+	.form input[type="submit"],
+	.form input[type="button"]
+	{
+	    position: relative;
+	    display: block;
+	    padding: 19px 39px 18px 39px;
+	    color: #FFF;
+	    margin: 0 auto;
+	    background: #fd974f;
+	    font-size: 18px;
+	    text-align: center;
+	    font-style: normal;
+	    width: 70%;
+	    border: 1px solid #f77604;
+	    border-width: 1px 1px 3px;
+	    margin-bottom: 10px;
+	    border-radius: 25px 25px ;
+	}
+	.form input[type="submit"]:hover,
+	.form input[type="button"]:hover
+	{
+	    background: #fb8a44;
+	}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

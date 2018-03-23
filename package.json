@@ -1,0 +1,18 @@
+{
+  "name": "assignment3",
+  "version": "1.0.0",
+  "description": "CMPT218 Assignment3",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "mongodb": "^3.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Lydia Zheng",
+  "license": "ISC"
+}
