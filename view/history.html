@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Check-in App</title>
+<meta charset="utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+<div>
+	<div class="tab">
+	    <form method="get" action="/">
+			<button type="submit">Homepage</button>
+		</form>
+		<form method="get" action="/check_in" method="GET">
+	    	<button type="submit">Student</button>
+	    </form>
+	</div>
+	<br>
+	<h1>Online Check-in Application </h1>
+	<h4>History</h4><br>
+	<table class="table" ng-repeat="course in courses">
+	  <thead>
+	    <tr>
+	      <th scope="col" class="checkID" ng-model="checkID">{{course_arr[$index]}}</th>
+	      <th scope="col">Username</th>
+	      <th scope="col">ID</th>
+	      <th scope="col">CheckIn Time</th>
+	      <th scope="col"><button type="button" class="btn btn-outline-danger" ng-click='DeleteColl(course_arr[$index])'>Delete</button></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr ng-repeat="item in course">
+	      <th scope="row">{{$index}}</th>
+	      <td>{{item.name}}</td>
+	      <td>{{item.address}}</td>
+	      <td>{{item.time}}</td>
+	    </tr>
+	  </tbody>
+	</table>
+  <tbody>
+</div>
+</body>
+<script>
+	var app = angular.module('myApp', []);
+	app.controller('myCtrl', function($scope, $http) {
+		var course_arr = [];
+		$http({
+          method  : 'GET',
+          url     : 'http://localhost:8080/history_table',
+          headers : { 'Content-Type': 'application/json' } 
+        })
+        .then(function(data) {
+            $scope.courses = data.data;
+            for(var i in data.data){
+            	course_arr.push(i);
+            }
+            $scope.course_arr = course_arr;
+        });
+
+
+	    $scope.DeleteColl = function(data) {
+	    	$http({
+	          method  : 'POST',
+	          url     : 'http://localhost:8080/delete_coll',
+	          data    : {checkID: data},
+	          headers : { 'Content-Type': 'application/json' } 
+	        })
+	        .then(function(data) {
+	            console.log("end", data)
+	            window.location.reload();
+	        });
+	    	
+    	};
+	});
+</script>
+
+
+
+<style>
+body{
+	background-color: #FAEBD7;
+}
+h1{
+	text-align: center;
+}
+h4{
+	text-align: center;
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+	margin-left: 10%;
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #FFDAB9;
+    color: #FF6347;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+.table{
+	text-align: center;
+	margin-left: 15%;
+	margin-right: 15%;
+	width: 70%;
+	background-color: #fef3e2;
+}
+.checkID{
+	width: 20%;
+}
+</style>

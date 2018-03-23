@@ -21,67 +21,6 @@ MongoClient.connect(url, function(err, client){
 	});
 });
 
-var history_head = `
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<title>Check-in App</title>
-			<meta charset="utf-8">
-			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-		</head>
-		<style>
-			body{
-				background-color: #FAEBD7;
-			}
-			h1{
-				text-align: center;
-			}
-			h4{
-				text-align: center;
-			}
-
-			/* Style the tab */
-			.tab {
-			    overflow: hidden;
-			    background-color: #f1f1f1;
-			}
-
-			/* Style the buttons inside the tab */
-			.tab button {
-				margin-left: 10%;
-			    background-color: inherit;
-			    float: left;
-			    border: none;
-			    outline: none;
-			    cursor: pointer;
-			    padding: 14px 16px;
-			    transition: 0.3s;
-			    font-size: 17px;
-			}
-
-			/* Change background color of buttons on hover */
-			.tab button:hover {
-			    background-color: #FFDAB9;
-			    color: #FF6347;
-			}
-
-			/* Create an active/current tablink class */
-			.tab button.active {
-			    background-color: #ccc;
-			}
-			.table{
-				text-align: center;
-				margin-left: 15%;
-				margin-right: 15%;
-				width: 70%;
-				background-color: #fef3e2;
-			}
-			.checkID{
-				width: 20%;
-			}
-		</style>
-	`;
 
 // set html
 app.get('/', function(req, res){
@@ -102,7 +41,9 @@ app.get('/err_check', function(req, res){
 app.get('/success', function(req, res){
 	res.sendFile('/view/success.html', {root: __dirname});
 });
-
+app.get('/history', function(req, res){
+	res.sendFile('/view/history.html', {root: __dirname});
+});
 
 // land to the admin page with username && password
 app.post('/admin', function(req,res){
@@ -219,84 +160,49 @@ app.post('/check_in', function(req,res){
 });
 
 // admin -- view history page
-app.get('/history', function(req, res){
-	var history_body_start = `
-		<body ng-app="myApp" ng-controller="myCtrl">
-			<div>
-				<div class="tab">
-				    <form method="get" action="/">
-						<button type="submit">Homepage</button>
-					</form>
-					<form method="get" action="/check_in" method="GET">
-				    	<button type="submit">Student</button>
-				    </form>
-				</div>
-				<br>
-				<h1>Online Check-in Application </h1>
-				<h4>History</h4><br>
-		`;
-
+app.get('/history_table', function(req, res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
 		var database = client.db('local'); 
-		var table_string = ``, table_body = ``, table_head_start=``;  // html string to store history table 
+		var myObj = {};
+
 		database.listCollections().toArray(function(err, collInfos) {
 			if(err) console.log(err);
 
 			collInfos.forEach(function(coll){
-				if(coll.name != "startup_log" && coll.name != "checkIn"){
+				if(coll.name != "startup_log" && coll.name != "checkIn" && coll.name != "readMe"){
 					console.log("coll.name ---> ", coll.name)
-					  	
+					if(!myObj[coll.name])	myObj[coll.name] = [];
+
 					database.collection(coll.name).find().toArray(function(err, data) {
-						// console.log(coll.name);
-						table_body = ``;   table_head_start = '';
-						table_head_start = `
-							<table class="table">
-							  <thead>
-							    <tr>
-							      <th scope="col" class="checkID">` + coll.name + `</th>
-							      <th scope="col">Username</th>
-							      <th scope="col">ID</th>
-							      <th scope="col">CheckIn Time</th>
-							      <th scope="col"><button type="button" class="btn btn-outline-danger" ng-click="DeleteColl(coll.name)">Delete</button></th>
-							    </tr>
-							  </thead>
-							  <tbody>
-					  	`;
-
-			            for(var i = 0; i < data.length; i++){
-			            	table_body = table_body+ '<tr><td>'+(i+1)+'</td><td>'+data[i].name+'</td><td>'+data[i].address+'</td><td>'+data[i].time+'</td></tr>';
-			            }
-
-			            var table_head_end = `
-					        	</tbody>
-							</table>`;
-			            table_string = table_string+table_head_start+ table_body+ table_head_end;
+						myObj[coll.name] = data;
 			        });
 				}
 			});
 
 		});
-		var history_body_end = `
-			</div>
-		</body>
-		<script>
-			var app = angular.module('myApp', []);
-			app.controller('myCtrl', function($scope) {
-			    $scope.DeleteColl = function() {
-			    	console.log("I M HERE")
-		    	};
-			});
-		</script>`;
-
 		setTimeout(function () {
-  			res.send(history_head+history_body_start+table_string+history_body_end);
-  			// console.log(history_head+history_body_start+table_string+history_body_end)
+			res.send(myObj);
   		}, 1000)
 	});
 	
 });
 
+// delete collections in history page 
+app.post('/delete_coll', function(req,res){
+	MongoClient.connect(url, function(err, client){ 
+		if (err) console.log(err); 
+		var database = client.db('local');
+		database.collection(req.body.checkID).drop(function(err, delOK) {
+			if (err) throw err;
+			if (delOK) console.log(req.body.checkID, "Collection deleted");
+			client.close();
+		});
+	});
+	setTimeout(function () {
+		res.sendFile('/view/history.html', {root: __dirname});
+	}, 500)
+});
 
 server.listen(PORT);
 console.log('Magic is happening on port', PORT);
