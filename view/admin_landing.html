@@ -80,7 +80,7 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.AdminCheckStart = function() {
         $http({
           method  : 'POST',
-          url     : 'http://localhost:8080/admin_landing_start',
+          url     : 'http://cmpt218.csil.sfu.ca:20464/admin_landing_start',
           data    : {checkID: $scope.checkID},
           headers : { 'Content-Type': 'application/json' } 
         })
@@ -92,14 +92,14 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.AdminCheckEnd = function() {
         $http({
           method  : 'POST',
-          url     : 'http://localhost:8080/admin_landing_end',
+          url     : 'http://cmpt218.csil.sfu.ca:20464/admin_landing_end',
           data    : {checkID: $scope.checkID},
           headers : { 'Content-Type': 'application/json' } 
         })
         .then(function(data) {
             $http({
 	          method  : 'POST',
-	          url     : 'http://localhost:8080/attendence',
+	          url     : 'http://cmpt218.csil.sfu.ca:20464/attendence',
 	          data    : {checkID: $scope.checkID},
 	          headers : { 'Content-Type': 'application/json' } 
 	        })

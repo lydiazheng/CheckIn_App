@@ -4,8 +4,11 @@
 <title>Check-in App</title>
 <meta charset="utf-8">
 <!-- Latest compiled and minified CSS Bootstrap 4-->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -19,10 +22,13 @@
 	    </form>
 	</div>
 
-	<br>
 	<h1>Welcome to Online Check-in Application! </h1>
 	<h4>CMPT 218 Assignment 3 -- Lydia Zheng</h4><br>
+	<button href="#" class="instruction" data-toggle="tooltip" data-placement="right" title="Additional Features: 1. Admin can delete collection in history page
+		2. Add app bar on top of the page
+		3. Add this instruction tooltip button ^_^ !">Instruction</button>
 
+	<br>
 	<form class="form" action="/admin" method="post">
 		<legend><span class="number">&#9830</span><b> ADMIN LOGIN </b></legend>
 		*Username:
@@ -38,16 +44,16 @@
 		<legend><span class="number">&#9830</span><b> USER LOGIN </b></legend>
 		<input class='checkIn' type="submit" value="CHECK-IN NOW"></input>
 	</form>
-
-
-
-
-
-
-
-
+r
 </div>
 </body>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
+
 <style>
 	body{
 		background-color: #FAEBD7;
@@ -165,6 +171,22 @@
 	.form input[type="button"]:hover
 	{
 	    background: #fb8a44;
+	}
+	button{
+		border: 2px solid #FFE4E1;
+	    padding: 10px;
+	    border-radius: 50px 25px;
+	}
+
+	button:hover {
+	    background-color: #FFDAB9; 
+	    color: #FF6347;
+	}
+
+	.instruction{
+		float: right;
+		margin-right: 40vw;
+		margin-top: -1%;
 	}
 </style>
 

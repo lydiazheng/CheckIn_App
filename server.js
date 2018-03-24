@@ -1,6 +1,6 @@
 'use strict'
 var express = require('express');
-const PORT = 8080;
+const PORT = 20464;
 var app = express();
 var http = require('http');
 var server = http.Server(app);
@@ -8,17 +8,21 @@ var bodyParser = require('body-parser');
 
 //mongoDB
 var MongoClient = require('mongodb').MongoClient; 
-// var url = "mongodb://weilingz:zwl19950928@127.0.0.1:27017/cmpt218_weilingz?authSource=admin"; 
-var url = "mongodb://127.0.0.1:27017/cmpt218_weilingz"; 
+var url = "mongodb://weilingz:F7MI4LE3@127.0.0.1:27017/cmpt218_weilingz?authSource=admin"; 
+// var url = "mongodb://127.0.0.1:27017/cmpt218_weilingz"; 
 
 app.use( bodyParser.json() ); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 //create checkIn collection to allow students check in
 MongoClient.connect(url, function(err, client){ 
-	client.db('local').createCollection("checkIn", function(err, res) {
-		if(err) throw err;
-	});
+	if (err) {throw err;}
+  	else {
+  		console.log("Connected successfully to server");
+	  		client.db('cmpt218_weilingz').createCollection("checkIn", function(err, res) {
+			if(err) throw err;
+		});
+  	}
 });
 
 
@@ -59,7 +63,7 @@ app.post('/admin_landing_start', function(req,res, next){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
 
-		var database = client.db('local'); 
+		var database = client.db('cmpt218_weilingz'); 
 		var start_time = new Date();
 		var myobj = {name: req.body.checkID, check: true};
 		
@@ -94,7 +98,7 @@ app.post('/admin_landing_start', function(req,res, next){
 app.post('/admin_landing_end', function(req,res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
-		var database = client.db('local'); 
+		var database = client.db('cmpt218_weilingz'); 
 		database.createCollection(req.body.checkID, function(err, res) {
 			if (err) throw err;
 			database.collection("checkIn").find({name: req.body.checkID}).toArray(function(err, result) {
@@ -116,7 +120,7 @@ app.post('/admin_landing_end', function(req,res){
 app.post('/attendence', function(req, res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
-		var database = client.db('local');
+		var database = client.db('cmpt218_weilingz');
 		database.collection(req.body.checkID).find().toArray(function(err, data) {
 			res.send(data);
 			client.close();
@@ -130,7 +134,7 @@ app.post('/check_in', function(req,res){
 		MongoClient.connect(url, function(err, client){ 
 			if (err) console.log(err); 
 			var time = (new Date()).toString();
-			var database = client.db('local'); 
+			var database = client.db('cmpt218_weilingz'); 
 			var collection = database.collection(req.body.check_in_string);
 			var myobj = { name: req.body.username, address: req.body.user_id, time: time};
 
@@ -163,7 +167,7 @@ app.post('/check_in', function(req,res){
 app.get('/history_table', function(req, res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
-		var database = client.db('local'); 
+		var database = client.db('cmpt218_weilingz'); 
 		var myObj = {};
 
 		database.listCollections().toArray(function(err, collInfos) {
@@ -192,7 +196,7 @@ app.get('/history_table', function(req, res){
 app.post('/delete_coll', function(req,res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
-		var database = client.db('local');
+		var database = client.db('cmpt218_weilingz');
 		database.collection(req.body.checkID).drop(function(err, delOK) {
 			if (err) throw err;
 			if (delOK) console.log(req.body.checkID, "Collection deleted");

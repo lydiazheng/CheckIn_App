@@ -47,7 +47,7 @@
 		var course_arr = [];
 		$http({
           method  : 'GET',
-          url     : 'http://localhost:8080/history_table',
+          url     : 'http://cmpt218.csil.sfu.ca:20464/history_table',
           headers : { 'Content-Type': 'application/json' } 
         })
         .then(function(data) {
@@ -62,7 +62,7 @@
 	    $scope.DeleteColl = function(data) {
 	    	$http({
 	          method  : 'POST',
-	          url     : 'http://localhost:8080/delete_coll',
+	          url     : 'http://cmpt218.csil.sfu.ca:20464/delete_coll',
 	          data    : {checkID: data},
 	          headers : { 'Content-Type': 'application/json' } 
 	        })
