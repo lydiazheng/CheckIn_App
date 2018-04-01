@@ -65,13 +65,16 @@ app.post('/admin_landing_start', function(req,res, next){
 
 		var database = client.db('cmpt218_weilingz'); 
 		var start_time = new Date();
-		var myobj = {name: req.body.checkID, check: true};
+		var start_epoch = (new Date).getTime();
+		var myobj = {name: req.body.checkID, check: true, start_epoch: start_epoch};
 		
+
 		database.createCollection(req.body.checkID, function(err, res) {
 		    if (err) throw err;
-		    console.log(req.body.checkID, "Collection created!");
+		    console.log(req.body.checkID, "Collection created!", start_epoch);
 		    database.collection("checkIn").find({name: req.body.checkID}).toArray(function(err, result) {
 	  			if(result.length == 0){   // if we dont have this course, create a new collection and turn on checking
+	  				console.log(myobj);
 	  				database.collection("checkIn").insertOne(myobj, function(err, data){ 
 						if(err) console.log(err);
 						client.close();
@@ -81,7 +84,8 @@ app.post('/admin_landing_start', function(req,res, next){
 	  			else{ // if we already have checkID course, then turn on checking
 	  				database.collection("checkIn").find({name: req.body.checkID}).toArray(function(err, data) {
 	  					var myquery = { name: req.body.checkID};
-						var newvalues = { $set: {check: true} };
+						var newvalues = { $set: {check: true, start_epoch: start_epoch} };
+						console.log(newvalues)
 						database.collection("checkIn").updateOne(myquery, newvalues, function(err, data) {
 						    if (err) throw err;
 						    client.close();
@@ -99,30 +103,35 @@ app.post('/admin_landing_end', function(req,res){
 	MongoClient.connect(url, function(err, client){ 
 		if (err) console.log(err); 
 		var database = client.db('cmpt218_weilingz'); 
+		var end_epoch = (new Date).getTime();
+
 		database.createCollection(req.body.checkID, function(err, res) {
 			if (err) throw err;
 			database.collection("checkIn").find({name: req.body.checkID}).toArray(function(err, result) {
 				  var myquery = { name: req.body.checkID};
-				  var newvalues = { $set: {check: false} };
+				  var newvalues = { $set: {check: false, end_epoch: end_epoch} };
 				  database.collection("checkIn").updateOne(myquery, newvalues, function(err, data) {
 				    if (err) throw err;
 				    client.close();
 				});
 			});
 		})
-		setTimeout(function () {
-  			res.send();
-  		}, 500)
+  		res.send();
 	});
 });
 
 // get the history of specific course after admin stop checking
 app.post('/attendence', function(req, res){
 	MongoClient.connect(url, function(err, client){ 
+		var time = [];
 		if (err) console.log(err); 
 		var database = client.db('cmpt218_weilingz');
+		database.collection("checkIn").find().toArray(function(err, data) {
+			time.push(data[0].start_epoch);
+			time.push(data[0].end_epoch);
+		});
 		database.collection(req.body.checkID).find().toArray(function(err, data) {
-			res.send(data);
+			res.send({data: data, time: time});
 			client.close();
 		});
 	});
@@ -134,9 +143,10 @@ app.post('/check_in', function(req,res){
 		MongoClient.connect(url, function(err, client){ 
 			if (err) console.log(err); 
 			var time = (new Date()).toString();
+			var user_epoch = (new Date).getTime();
 			var database = client.db('cmpt218_weilingz'); 
 			var collection = database.collection(req.body.check_in_string);
-			var myobj = { name: req.body.username, address: req.body.user_id, time: time};
+			var myobj = { name: req.body.username, address: req.body.user_id, time: time, user_epoch: user_epoch};
 
 			database.collection("checkIn").find({name: req.body.check_in_string}).toArray(function(err, result) {
 			    if (err) throw err;

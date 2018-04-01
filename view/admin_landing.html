@@ -46,7 +46,7 @@
 	</div>
 
 	<div ng-show="getTableData">
-		<h5>{{course_len}} students have checked in!!</h5>
+		<h5>{{course_len}} students have checked in from {{start_time}} to {{end_time}}!!</h5>
 	</div>
 
 	<div ng-show="getTableData">
@@ -61,6 +61,30 @@
 		  </thead>
 		  <tbody>
 		  	<tr ng-repeat="x in course">
+		  		<td>{{$index}}</td>
+		  		<td>{{x.name}}</td>
+		  		<td>{{x.address}}</td>
+		  		<td>{{x.time}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+	<div ng-show="getTableData">
+		<h5>All students checked in {{checkID}}</h5>
+	</div>
+
+	<div ng-show="getTableData">
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col" class="checkID">{{checkID}}</th>
+		      <th scope="col">Username</th>
+		      <th scope="col">ID</th>
+		      <th scope="col">CheckIn Time</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	<tr ng-repeat="x in all_students">
 		  		<td>{{$index}}</td>
 		  		<td>{{x.name}}</td>
 		  		<td>{{x.address}}</td>
@@ -104,8 +128,22 @@ app.controller('myCtrl', function($scope, $http) {
 	          headers : { 'Content-Type': 'application/json' } 
 	        })
 		    .then(function(course) {
-		    	$scope.course = course.data;
-		    	$scope.course_len = course.data.length;
+		    	console.log(course);
+		    	$scope.course = [];
+		    	for(var user in course.data.data){
+		    		if(course.data.data[user].user_epoch >= course.data.time[0] && course.data.data[user].user_epoch <= course.data.time[1]){
+		    			$scope.course.push(course.data.data[user]);
+		    		}
+		    	}
+		    	$scope.course_len = $scope.course.length;
+		    	var d = new Date(0);
+		    	$scope.start_time = new Date(course.data.time[0]).toString();
+		    	$scope.start_time = $scope.start_time.split('GMT-0700 (PDT)').join('');
+		    	$scope.end_time = new Date(course.data.time[1]).toString();
+		    	$scope.end_time = $scope.end_time.split('GMT-0700 (PDT)').join('');
+
+		    	// Display all students in this course
+		    	$scope.all_students = course.data.data;
 		    });
         });
     };
@@ -138,6 +176,9 @@ app.controller('myCtrl', function($scope, $http) {
 		text-align: center;
 	}
 
+	h5 {
+		color: #ba5536;
+	}
 	/* Style the tab */
 	.tab {
 	    overflow: hidden;
